@@ -1,4 +1,3 @@
-Speed 10-100 for best non-site breaking speed.
-No annoying //'s.
-Speed averages 136-214 so it doesn't break the site but still fast.
-Fast compute speed.
+Human-like typing speed patterns.
+No annoying script comments.
+Fast computing speed.
