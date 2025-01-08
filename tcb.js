@@ -1,7 +1,7 @@
-const minDelay = 20;  // Reduced delay for faster typing
-const maxDelay = 60;  // Reduced delay for faster typing
+const minDelay = 40;
+const maxDelay = 100;
 const keyOverrides = {
-  [String.fromCharCode(160)]: ' '  // Handle non-breaking space
+  [String.fromCharCode(160)]: ' '
 };
 function getTargetCharacters() {
   const els = Array.from(document.querySelectorAll('.token span.token_unit'));
@@ -22,28 +22,28 @@ function sleep(ms) {
 async function typeCharacter(chr) {
   recordKey(chr);
   const delay = Math.random() * (maxDelay - minDelay) + minDelay;
-  await sleep(delay);  // Typing delay between characters
+  await sleep(delay);
 }
 function goToNextLevel() {
   setTimeout(async () => {
     const nextButton = Array.from(document.querySelectorAll('span')).find(el => el.textContent === '→');
     if (nextButton) {
-      nextButton.click();  // Click "Next Level" button immediately
-      await sleep(500);  // Reduced sleep time after clicking next level
-      autoPlay();  // Continue the game automatically
+      nextButton.click();
+      await sleep(800);
+      autoPlay();
     }
-  }, 1000);  // Faster transition to the next level
+  }, 1200);
 }
 async function autoPlay() {
   const chrs = getTargetCharacters();
   if (chrs.length === 0) {
-    goToNextLevel();  // Automatically go to the next level if no characters left
+    goToNextLevel();
     return;
   }
   for (let i = 0; i < chrs.length; ++i) {
     const c = chrs[i];
-    await typeCharacter(c);  // Type each character
+    await typeCharacter(c);
   }
-  goToNextLevel();  // Move to the next level after completing the current level
+  goToNextLevel();
 }
-autoPlay();  // Start the auto-play function
+autoPlay();
