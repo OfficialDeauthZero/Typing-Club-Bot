@@ -1,5 +1,5 @@
 const minDelay = 50;
-const maxDelay = 250;
+const maxDelay = 120;
 const keyOverrides = {
   [String.fromCharCode(160)]: ' '
 };
