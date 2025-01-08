@@ -1,26 +1,38 @@
-const minDelay = 10;
-const maxDelay = 100;
+const minDelay = 50;
+const maxDelay = 250;
 const keyOverrides = {
-  [String.fromCharCode(160)]: ' '  
+  [String.fromCharCode(160)]: ' '
 };
 function getTargetCharacters() {
   const els = Array.from(document.querySelectorAll('.token span.token_unit'));
-  const chrs = els
-    .map(el => {
-      if (el.firstChild?.classList?.contains('_enter')) {
-        return '\n';
-      }
-      let text = el.textContent[0];
-      return text;
-    })
-    .map(c => keyOverrides.hasOwnProperty(c) ? keyOverrides[c] : c); // convert special characters
-  return chrs;
+  return els.map(el => {
+    if (el.firstChild?.classList?.contains('_enter')) {
+      return '\n';
+    }
+    let text = el.textContent[0];
+    return keyOverrides.hasOwnProperty(text) ? keyOverrides[text] : text;
+  });
 }
 function recordKey(chr) {
   window.core.record_keydown_time(chr);
 }
 function sleep(ms) {
-  return new Promise(r => setTimeout(r, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function typeCharacter(chr) {
+  recordKey(chr);
+  const delay = Math.random() * (maxDelay - minDelay) + minDelay;
+  await sleep(delay);
+}
+function goToNextLevel() {
+  setTimeout(async () => {
+    const nextButton = Array.from(document.querySelectorAll('span')).find(el => el.textContent === '→');
+    if (nextButton) {
+      nextButton.click();
+      await sleep(1000);
+      autoPlay();
+    }
+  }, 2000);
 }
 async function autoPlay() {
   const chrs = getTargetCharacters();
@@ -30,22 +42,8 @@ async function autoPlay() {
   }
   for (let i = 0; i < chrs.length; ++i) {
     const c = chrs[i];
-    recordKey(c);
-    await sleep(Math.random() * (maxDelay - minDelay) + minDelay);
+    await typeCharacter(c);
   }
   goToNextLevel();
-}
-function goToNextLevel() {
-  setTimeout(async () => {
-    const nextButton = Array.from(document.querySelectorAll('span')).find(el => el.textContent === '→');
-    if (nextButton) {
-      nextButton.click();
-      console.log('Moving to next level...');
-      await sleep(1000); // Adjust this delay if necessary
-      autoPlay(); 
-    } else {
-      console.log('Next level button not found.');
-    }
-  }, 2000);
 }
 autoPlay();
